@@ -9,14 +9,14 @@ export default function CameraCard({ camera, onEdit, onDelete }) {
         switch (status) {
             case 'connected':
                 return (
-                    <span className="flex items-center gap-2 text-xs font-medium px-2 py-1 bg-green-50 text-green-600 rounded-full border border-green-200 shadow-sm">
+                    <span className="flex items-center gap-1.5 px-3 py-1 bg-green-900/30 text-green-400 border border-green-800 rounded-md text-xs font-semibold shadow-sm">
                         <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                         Online
                     </span>
                 );
             case 'connecting':
                 return (
-                    <span className="flex items-center gap-2 text-xs font-medium px-2 py-1 bg-amber-50 text-amber-600 rounded-full border border-amber-200 shadow-sm">
+                    <span className="flex items-center gap-1.5 px-3 py-1 bg-amber-900/30 text-amber-400 border border-amber-800 rounded-md text-xs font-semibold shadow-sm">
                         <RefreshCcw className="w-3 h-3 animate-spin" />
                         Connecting
                     </span>
@@ -24,7 +24,7 @@ export default function CameraCard({ camera, onEdit, onDelete }) {
             case 'disconnected':
             case 'failed':
                 return (
-                    <span className="flex items-center gap-2 text-xs font-medium px-2 py-1 bg-red-50 text-red-600 rounded-full border border-red-200 shadow-sm">
+                    <span className="flex items-center gap-1.5 px-3 py-1 bg-red-900/30 text-red-400 border border-red-800 rounded-md text-xs font-semibold shadow-sm">
                         <AlertCircle className="w-3 h-3" />
                         Offline
                     </span>
@@ -47,32 +47,34 @@ export default function CameraCard({ camera, onEdit, onDelete }) {
     };
 
     return (
-        <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow duration-300 group">
+        <div className="bg-slate-800 p-6 md:p-8 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-4 group">
             {/* Header */}
-            <div className="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-white/50 backdrop-blur-sm z-10 relative">
+            <div className="flex justify-between items-center z-10 relative">
                 <div className="flex items-center gap-3">
-                    <div className="p-2 bg-slate-100 rounded-lg group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
-                        <Video className="w-4 h-4" />
+                    <div className="p-2 bg-slate-900 rounded-lg text-slate-400">
+                        <Video className="w-5 h-5" />
                     </div>
-                    <span className="font-semibold text-slate-700">{camera.name}</span>
+                    <span className="text-lg font-bold text-white tracking-tight">{camera.name}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                     {getStatusIndicator()}
-                    {onEdit && (
-                        <button onClick={() => onEdit(camera)} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit Kamera">
-                            <Pencil className="w-4 h-4" />
-                        </button>
-                    )}
-                    {onDelete && (
-                        <button onClick={() => onDelete(camera.id)} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus Kamera">
-                            <Trash2 className="w-4 h-4" />
-                        </button>
-                    )}
+                    <div className="flex items-center gap-1 ml-2 border-l border-slate-700 pl-3">
+                        {onEdit && (
+                            <button onClick={() => onEdit(camera)} className="p-1.5 text-slate-500 hover:text-komdigi-blue hover:bg-slate-700 rounded-lg transition-colors" title="Edit Kamera">
+                                <Pencil className="w-4 h-4" />
+                            </button>
+                        )}
+                        {onDelete && (
+                            <button onClick={() => onDelete(camera.id)} className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-slate-700 rounded-lg transition-colors" title="Hapus Kamera">
+                                <Trash2 className="w-4 h-4" />
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 
             {/* Video Container */}
-            <div className="relative aspect-video bg-slate-900 flex items-center justify-center overflow-hidden group/video">
+            <div className="relative aspect-video bg-black rounded-lg flex items-center justify-center overflow-hidden group/video shadow-inner">
                 <video
                     ref={videoRef}
                     autoPlay
@@ -100,7 +102,7 @@ export default function CameraCard({ camera, onEdit, onDelete }) {
                 {status === 'connected' && (
                     <button 
                         onClick={handleFullscreen}
-                        className="absolute bottom-3 right-3 p-2 bg-black/50 hover:bg-black/80 text-white rounded-lg opacity-0 group-hover/video:opacity-100 transition-opacity duration-300 backdrop-blur-sm"
+                        className="absolute bottom-3 right-3 p-2 bg-black/50 hover:bg-black/80 text-white rounded-lg opacity-0 group-hover/video:opacity-100 transition-opacity duration-300 backdrop-blur-sm border border-slate-700"
                         title="Fullscreen"
                     >
                         <Expand className="w-5 h-5" />
