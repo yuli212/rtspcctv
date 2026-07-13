@@ -38,8 +38,7 @@ export function useCameras() {
         finalUrl = `http://localhost:8889/${id}/whep`;
       } catch (err) {
         console.error("Failed to register RTSP", err);
-        alert("Gagal mendaftarkan RTSP ke MediaMTX. Pastikan mediamtx.yml memiliki api: yes dan sudah direstart.");
-        return;
+        return { success: false, message: "Gagal mendaftarkan RTSP ke MediaMTX. Pastikan mediamtx.yml memiliki api: yes dan sudah direstart." };
       }
     }
 
@@ -50,6 +49,7 @@ export function useCameras() {
       id
     };
     setCameras(prev => [...prev, newCamera]);
+    return { success: true };
   };
 
   const updateCamera = (id, updatedData) => {

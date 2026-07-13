@@ -5,6 +5,7 @@ import L from 'leaflet';
 import { useLocations } from '../../hooks/useLocations';
 import { useCameras } from '../../hooks/useCameras';
 import { MapPin, X, RefreshCcw, Video, Camera, Plus, Map as MapIco } from 'lucide-react';
+import CustomDialog from '../../components/CustomDialog';
 
 // Fix leafet default icon issue in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -64,6 +65,17 @@ export default function MapsTab() {
   const [newCamUrl, setNewCamUrl] = useState('http://localhost:8889/camera-dummy/whep');
   const [newCamLocId, setNewCamLocId] = useState('');
 
+  // Custom Dialog State
+  const [dialogState, setDialogState] = useState({
+    isOpen: false,
+    type: null,
+    title: '',
+    message: '',
+    onConfirm: null,
+  });
+
+  const closeDialog = () => setDialogState(prev => ({ ...prev, isOpen: false }));
+
   const defaultCenter = locations.length > 0 && locations[0].lat 
     ? [locations[0].lat, locations[0].lng] 
     : [-7.9666, 112.6326];
@@ -90,10 +102,22 @@ export default function MapsTab() {
     setActiveForm(null);
   };
 
-  const handleSaveCamera = (e) => {
+  const handleSaveCamera = async (e) => {
     e.preventDefault();
     if (!newCamName.trim() || !newCamUrl.trim() || !newCamLocId) return;
-    addCamera({ name: newCamName.trim(), url: newCamUrl.trim(), locationId: newCamLocId });
+    
+    const result = await addCamera({ name: newCamName.trim(), url: newCamUrl.trim(), locationId: newCamLocId });
+    if (result && !result.success) {
+      setDialogState({
+        isOpen: true,
+        type: 'alert',
+        title: 'Gagal Menambah Kamera',
+        message: result.message,
+        onConfirm: closeDialog
+      });
+      return;
+    }
+
     setNewCamName('');
     setNewCamUrl('http://localhost:8889/camera-dummy/whep');
     setActiveForm(null);
@@ -227,7 +251,7 @@ export default function MapsTab() {
                     <div className="flex gap-2 mt-4">
                       <button 
                         onClick={() => handleOpenCameraList(loc)}
-                        className="flex-1 bg-komdigi-blue hover:bg-[#0082c4] text-white py-1.5 rounded text-sm font-semibold transition-colors text-center"
+                        className="flex-1 bg-[#00336C] hover:bg-[#00336C] text-white py-2 rounded text-sm font-bold transition-none text-center shadow-md"
                       >
                         Lihat Detail
                       </button>
@@ -305,20 +329,12 @@ export default function MapsTab() {
               
               {/* Video Player */}
               <div className="w-full aspect-video bg-black relative flex justify-center items-center">
-                 <img 
+                 <iframe 
                     src={`http://localhost:8888/${selectedCamera.id}/`}
-                    alt="Live Feed"
-                    className="w-full h-full object-contain pointer-events-none"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.parentElement.innerHTML = `
-                        <div class="flex flex-col items-center justify-center text-gray-500 h-full w-full pointer-events-none">
-                          <span class="text-white text-lg font-bold mb-2 uppercase tracking-widest opacity-30">No Video</span>
-                          <span class="text-xs opacity-50 font-mono">${selectedCamera.url}</span>
-                        </div>
-                      `;
-                    }}
-                  />
+                    title="Live Feed"
+                    className="w-full h-full border-0 pointer-events-auto"
+                    allow="autoplay; fullscreen"
+                  ></iframe>
                  
                  <div className="absolute top-4 left-4 text-white font-mono text-[10px] drop-shadow-md pointer-events-none bg-black/50 px-2 py-1 rounded">
                    {new Date().toLocaleDateString('id-ID')} {new Date().toLocaleTimeString('id-ID')}
@@ -346,6 +362,10 @@ export default function MapsTab() {
         )}
       </div>
 
+      <CustomDialog 
+        {...dialogState} 
+        onCancel={closeDialog} 
+      />
     </div>
   );
 }
