@@ -52,10 +52,36 @@ export function useCameras() {
     return { success: true };
   };
 
-  const updateCamera = (id, updatedData) => {
-    // Note: For simplicity, editing RTSP URL requires recreating the path. 
-    // In this basic version, we just update the local state.
-    setCameras(prev => prev.map(cam => cam.id === id ? { ...cam, ...updatedData } : cam));
+  const updateCamera = async (id, updatedData) => {
+    let finalUrl = updatedData.url || '';
+    
+    // If the URL was changed and it's an RTSP, we might need to register it.
+    if (updatedData.url && updatedData.url.startsWith('rtsp://')) {
+      try {
+        await fetch(`/api/mediamtx/v3/config/paths/delete/${id}`, { method: 'POST' }).catch(() => {});
+        const response = await fetch(`/api/mediamtx/v3/config/paths/add/${id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ source: updatedData.url, sourceOnDemand: true })
+        });
+        if (response.ok) {
+          finalUrl = `http://localhost:8889/${id}/whep`;
+        }
+      } catch (err) {
+        console.error("Failed to re-register RTSP", err);
+      }
+    }
+
+    const newData = {
+      ...updatedData,
+      ...(updatedData.url ? { 
+        url: finalUrl, 
+        originalRtsp: updatedData.url.startsWith('rtsp://') ? updatedData.url : '' 
+      } : {})
+    };
+
+    setCameras(prev => prev.map(cam => cam.id === id ? { ...cam, ...newData } : cam));
+    return { success: true };
   };
 
   const deleteCamera = async (id) => {

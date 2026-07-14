@@ -21,7 +21,7 @@ export default function CustomDialog({ isOpen, type, title, message, defaultValu
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in duration-200">
       <div className="bg-[#1e1e1e] border border-[#333] rounded-md shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200">
-        
+
         <div className="p-4 border-b border-[#2b2b2b] flex items-start gap-3">
           <div className="mt-0.5">
             {type === 'confirm' && <HelpCircle className="w-5 h-5 text-komdigi-blue" />}
@@ -38,8 +38,8 @@ export default function CustomDialog({ isOpen, type, title, message, defaultValu
           <div className="p-4 border-b border-[#2b2b2b] bg-[#1a1a1a] flex flex-col gap-3">
             <div>
               {type === 'location-prompt' && <label className="text-xs text-gray-500 mb-1 block">Nama Lokasi</label>}
-              <input 
-                type="text" 
+              <input
+                type="text"
                 autoFocus
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
@@ -52,11 +52,11 @@ export default function CustomDialog({ isOpen, type, title, message, defaultValu
                 }}
               />
             </div>
-            
+
             {type === 'location-prompt' && (
               <div>
                 <label className="text-xs text-gray-500 mb-1 block">Alamat Lengkap</label>
-                <textarea 
+                <textarea
                   rows={2}
                   value={addressValue}
                   onChange={(e) => setAddressValue(e.target.value)}
@@ -76,22 +76,21 @@ export default function CustomDialog({ isOpen, type, title, message, defaultValu
 
         <div className="p-3 bg-[#2b2b2b] flex justify-end gap-2">
           {type !== 'alert' && (
-            <button 
+            <button
               onClick={onCancel}
               className="px-4 py-1.5 rounded-sm text-xs font-semibold text-gray-300 hover:text-white hover:bg-[#444] transition-colors"
             >
               Batal
             </button>
           )}
-          <button 
+          <button
             onClick={() => {
               if (type === 'location-prompt') onConfirm({ name: inputValue, address: addressValue });
               else if (type === 'prompt') onConfirm(inputValue);
               else onConfirm();
             }}
-            className={`px-4 py-1.5 rounded-sm text-xs font-semibold text-white transition-colors shadow-sm ${
-              type === 'confirm' ? 'bg-red-600 hover:bg-red-700' : 'bg-komdigi-blue hover:bg-[#0082c4]'
-            }`}
+            className={`px-4 py-1.5 rounded-sm text-xs font-semibold text-white transition-colors shadow-sm ${type === 'confirm' ? 'bg-red-600 hover:bg-red-700' : 'bg-komdigi-blue hover:bg-[#0082c4]'
+              }`}
           >
             {type === 'alert' ? 'OK' : type === 'confirm' ? 'Hapus' : 'Simpan'}
           </button>

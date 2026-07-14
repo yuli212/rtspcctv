@@ -11,7 +11,7 @@ export default function PublicLayout() {
       className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
         isActive 
           ? 'bg-komdigi-green text-white shadow-sm' 
-          : 'text-slate-300 hover:text-white hover:bg-slate-700'
+          : 'text-gray-400 hover:text-white hover:bg-[#3a3a3a]'
       }`}
     >
       {children}
@@ -19,19 +19,20 @@ export default function PublicLayout() {
   );
 
   return (
-    <div className="font-sans antialiased min-h-screen flex flex-col bg-slate-900 text-slate-200">
+    <div className="font-sans antialiased min-h-screen flex flex-col bg-[#1a1a1a] text-gray-300">
       
       {/* Top Navbar */}
-      <header className="w-full bg-slate-800 border-b border-slate-700 shadow-sm h-16 flex items-center">
-        <div className="container mx-auto px-6 flex items-center justify-between">
+      <header className="flex-none bg-[#242424] border-b border-black h-16 flex items-center justify-between">
+        <div className="w-full px-6 flex items-center justify-between">
           
           {/* Logo & Title */}
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-komdigi-green flex items-center justify-center shadow-lg shadow-komdigi-green/20">
-              <ShieldCheck className="text-white w-5 h-5" />
-            </div>
-            <h1 className="text-lg font-bold text-white tracking-tight">
-              PORTAL <span className="text-komdigi-green">CCTV</span>
+          <div className="flex items-center gap-3 h-full">
+            <img src="/logo.png" alt="Logo" className="h-8 md:h-10 w-auto object-contain" />
+            <h1 className="text-sm font-bold text-gray-200 tracking-wider hidden md:block">
+              PANTAU DISKOMINFO
+            </h1>
+            <h1 className="text-sm font-bold text-gray-200 tracking-wider md:hidden">
+              PANTAU DISKOMINFO
             </h1>
           </div>
 
@@ -39,7 +40,6 @@ export default function PublicLayout() {
           <nav className="flex items-center gap-2">
             <NavLink to="/dashboard/view" isActive={false}>Beranda</NavLink>
             <NavLink to="/login" isActive={location.pathname === '/login'}>Masuk</NavLink>
-            <NavLink to="/register" isActive={location.pathname === '/register'}>Daftar</NavLink>
           </nav>
 
         </div>

@@ -147,13 +147,14 @@ export default function MainViewTab() {
     e.stopPropagation();
     setDialogState({
       isOpen: true,
-      type: 'prompt',
-      title: 'Ubah Nama Kamera',
-      message: 'Masukkan nama baru untuk kamera ini:',
+      type: 'camera-prompt',
+      title: 'Ubah Informasi Kamera',
+      message: 'Ubah nama dan Stream URL untuk kamera ini:',
       defaultValue: cam.name,
-      onConfirm: (newName) => {
-        if (newName && newName.trim()) {
-          updateCamera(cam.id, { name: newName.trim() });
+      defaultUrl: cam.originalRtsp || cam.url,
+      onConfirm: async (data) => {
+        if (data && data.name.trim() && data.url.trim()) {
+          await updateCamera(cam.id, { name: data.name.trim(), url: data.url.trim() });
         }
         closeDialog();
       }
@@ -357,8 +358,7 @@ export default function MainViewTab() {
       {/* Bottom Toolbar */}
       <div className="h-12 bg-black/40 backdrop-blur-xl border-t border-white/10 flex items-center justify-between px-4 shrink-0 shadow-[0_-5px_15px_rgba(0,0,0,0.3)] z-20">
         <div className="flex items-center gap-4">
-          <Settings2 className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer active:scale-90 transition-transform" />
-          <span className="text-xs text-gray-500">PTZ Control</span>
+          {/* PTZ Control Placeholder removed */}
         </div>
         
         <div className="flex items-center gap-2">

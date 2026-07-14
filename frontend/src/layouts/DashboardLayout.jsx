@@ -21,18 +21,18 @@ export default function DashboardLayout() {
     <div className="font-sans antialiased h-screen flex flex-col bg-[#1a1a1a] text-gray-300 overflow-hidden">
       
       {/* Top Navbar - iVMS Style */}
-      <header className="flex-none bg-[#242424] border-b border-black flex items-center justify-between h-14">
+      <header className="flex-none bg-[#242424] border-b border-black flex items-center justify-between h-16">
         
         {/* Left: Logo & Tabs */}
         <div className="flex items-center h-full">
           {/* Logo Area */}
-          <div className="flex items-center gap-3 px-4 h-full border-r border-[#333] min-w-[200px]">
-            {isAdmin ? <ShieldCheck className="text-komdigi-green w-6 h-6" /> : <Activity className="text-komdigi-green w-6 h-6" />}
+          <div className="flex items-center gap-3 px-6 h-full border-r border-[#333] min-w-[200px]">
+            <img src="/logo.png" alt="Logo" className="h-8 md:h-10 w-auto object-contain" />
             <h1 className="text-sm font-bold text-gray-200 tracking-wider hidden md:block">
-              {isAdmin ? 'ADMIN PANEL CCTV' : 'CCTV KOMDIGI MALANG'}
+              PANTAU DISKOMINFO
             </h1>
             <h1 className="text-sm font-bold text-gray-200 tracking-wider md:hidden">
-              {isAdmin ? 'ADMIN CCTV' : 'CCTV KOMDIGI'}
+              PANTAU DISKOMINFO
             </h1>
           </div>
 
@@ -40,37 +40,37 @@ export default function DashboardLayout() {
           <div className="flex h-full">
             <Link 
               to={`${basePath}/maps`}
-              className={`flex items-center gap-2 px-6 h-full border-r border-[#333] transition-colors ${
+              className={`flex items-center gap-2 px-8 h-full border-r border-[#333] transition-colors ${
                 isMapsView 
-                  ? 'bg-[#3a3a3a] text-white border-t-2 border-t-komdigi-green' 
-                  : 'hover:bg-[#2a2a2a] text-gray-400 border-t-2 border-t-transparent'
+                  ? 'bg-[#3a3a3a] text-white border-t-[3px] border-t-komdigi-green' 
+                  : 'hover:bg-[#2a2a2a] text-gray-400 border-t-[3px] border-t-transparent'
               }`}
             >
               <MapIcon className="w-4 h-4" />
-              <span className="text-xs font-semibold uppercase tracking-wider">Maps</span>
+              <span className="text-sm font-semibold uppercase tracking-wider">Maps</span>
             </Link>
 
             <Link 
               to={`${basePath}/view`}
-              className={`flex items-center gap-2 px-6 h-full border-r border-[#333] transition-colors ${
+              className={`flex items-center gap-2 px-8 h-full border-r border-[#333] transition-colors ${
                 isMainView 
-                  ? 'bg-[#3a3a3a] text-white border-t-2 border-t-komdigi-green' 
-                  : 'hover:bg-[#2a2a2a] text-gray-400 border-t-2 border-t-transparent'
+                  ? 'bg-[#3a3a3a] text-white border-t-[3px] border-t-komdigi-green' 
+                  : 'hover:bg-[#2a2a2a] text-gray-400 border-t-[3px] border-t-transparent'
               }`}
             >
               <Monitor className="w-4 h-4" />
-              <span className="text-xs font-semibold uppercase tracking-wider">Main View</span>
+              <span className="text-sm font-semibold uppercase tracking-wider">Main View</span>
             </Link>
           </div>
         </div>
 
         {/* Right: Actions */}
         <div className="flex items-center h-full">
-          <div className="flex flex-col justify-center px-4 h-full border-l border-[#333] text-right">
-            <div className="text-xs font-bold text-gray-200">
-              {time.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+          <div className="flex flex-col justify-center px-6 h-full border-l border-[#333] text-right">
+            <div className="text-sm font-extrabold text-white tracking-widest">
+              {time.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':')}
             </div>
-            <div className="text-[10px] text-gray-500">
+            <div className="text-[11px] font-medium text-gray-400 mt-0.5">
               {time.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' })}
             </div>
           </div>
