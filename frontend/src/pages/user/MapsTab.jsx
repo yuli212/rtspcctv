@@ -58,11 +58,12 @@ export default function MapsTab() {
   
   // New Location Form State
   const [newLocName, setNewLocName] = useState('');
+  const [newLocAddress, setNewLocAddress] = useState('');
   const [newLocPos, setNewLocPos] = useState({ lat: -7.9666, lng: 112.6326 });
   
   // New Camera Form State
   const [newCamName, setNewCamName] = useState('');
-  const [newCamUrl, setNewCamUrl] = useState('http://localhost:8889/camera-dummy/whep');
+  const [newCamUrl, setNewCamUrl] = useState('');
   const [newCamLocId, setNewCamLocId] = useState('');
 
   // Custom Dialog State
@@ -97,8 +98,9 @@ export default function MapsTab() {
   const handleSaveLocation = (e) => {
     e.preventDefault();
     if (!newLocName.trim() || !newLocPos) return;
-    addLocation(newLocName.trim(), newLocPos.lat, newLocPos.lng);
+    addLocation(newLocName.trim(), newLocAddress.trim(), newLocPos.lat, newLocPos.lng);
     setNewLocName('');
+    setNewLocAddress('');
     setActiveForm(null);
   };
 
@@ -119,7 +121,7 @@ export default function MapsTab() {
     }
 
     setNewCamName('');
-    setNewCamUrl('http://localhost:8889/camera-dummy/whep');
+    setNewCamUrl('');
     setActiveForm(null);
   };
 
@@ -163,9 +165,19 @@ export default function MapsTab() {
                     type="text" 
                     value={newLocName}
                     onChange={(e) => setNewLocName(e.target.value)}
-                    placeholder="Contoh: Lobi Utama"
                     className="w-full p-2 bg-[#1e1e1e] border border-[#333] rounded focus:border-komdigi-green outline-none text-sm text-white transition-colors"
                     required
+                    autoComplete="off"
+                    spellCheck="false"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1">Alamat Lengkap</label>
+                  <textarea 
+                    value={newLocAddress}
+                    onChange={(e) => setNewLocAddress(e.target.value)}
+                    rows={2}
+                    className="w-full p-2 bg-[#1e1e1e] border border-[#333] rounded focus:border-komdigi-green outline-none text-sm text-white transition-colors resize-none"
                   />
                 </div>
                 <div className="bg-[#1e1e1e] p-3 rounded border border-komdigi-green/50">
@@ -191,9 +203,10 @@ export default function MapsTab() {
                     type="text" 
                     value={newCamName}
                     onChange={(e) => setNewCamName(e.target.value)}
-                    placeholder="Contoh: CCTV Gerbang"
                     className="w-full p-2 bg-[#1e1e1e] border border-[#333] rounded focus:border-komdigi-green outline-none text-sm text-white transition-colors"
                     required
+                    autoComplete="off"
+                    spellCheck="false"
                   />
                 </div>
                 <div>
@@ -204,6 +217,8 @@ export default function MapsTab() {
                     onChange={(e) => setNewCamUrl(e.target.value)}
                     className="w-full p-2 bg-[#1e1e1e] border border-[#333] rounded focus:border-komdigi-green outline-none text-sm text-white transition-colors"
                     required
+                    autoComplete="off"
+                    spellCheck="false"
                   />
                 </div>
                 <div>
@@ -245,6 +260,7 @@ export default function MapsTab() {
                       {loc.name}
                     </h3>
                     <div className="mb-4 text-slate-600 text-xs flex flex-col gap-1">
+                      {loc.address && <span className="font-medium text-slate-700">{loc.address}</span>}
                       <span>LABEL: Titik Pantau CCTV</span>
                       <span>LOKASI: Koordinat {loc.lat.toFixed(4)}, {loc.lng.toFixed(4)}</span>
                     </div>

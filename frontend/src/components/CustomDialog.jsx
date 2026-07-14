@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, HelpCircle, Pencil } from 'lucide-react';
 
-export default function CustomDialog({ isOpen, type, title, message, defaultValue, onConfirm, onCancel }) {
+export default function CustomDialog({ isOpen, type, title, message, defaultValue, defaultAddress, onConfirm, onCancel }) {
   const [inputValue, setInputValue] = useState('');
+  const [addressValue, setAddressValue] = useState('');
 
   useEffect(() => {
-    if (isOpen && type === 'prompt') {
-      setInputValue(defaultValue || '');
+    if (isOpen) {
+      if (type === 'prompt' || type === 'location-prompt') {
+        setInputValue(defaultValue || '');
+      }
+      if (type === 'location-prompt') {
+        setAddressValue(defaultAddress || '');
+      }
     }
-  }, [isOpen, type, defaultValue]);
+  }, [isOpen, type, defaultValue, defaultAddress]);
 
   if (!isOpen) return null;
 
@@ -19,7 +25,7 @@ export default function CustomDialog({ isOpen, type, title, message, defaultValu
         <div className="p-4 border-b border-[#2b2b2b] flex items-start gap-3">
           <div className="mt-0.5">
             {type === 'confirm' && <HelpCircle className="w-5 h-5 text-komdigi-blue" />}
-            {type === 'prompt' && <Pencil className="w-5 h-5 text-komdigi-green" />}
+            {(type === 'prompt' || type === 'location-prompt') && <Pencil className="w-5 h-5 text-komdigi-green" />}
             {type === 'alert' && <AlertCircle className="w-5 h-5 text-red-500" />}
           </div>
           <div className="flex-1">
@@ -28,19 +34,43 @@ export default function CustomDialog({ isOpen, type, title, message, defaultValu
           </div>
         </div>
 
-        {type === 'prompt' && (
-          <div className="p-4 border-b border-[#2b2b2b] bg-[#1a1a1a]">
-            <input 
-              type="text" 
-              autoFocus
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              className="w-full p-2 bg-[#222] border border-[#444] rounded text-sm text-white focus:border-komdigi-green outline-none transition-colors"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') onConfirm(inputValue);
-                if (e.key === 'Escape') onCancel();
-              }}
-            />
+        {(type === 'prompt' || type === 'location-prompt') && (
+          <div className="p-4 border-b border-[#2b2b2b] bg-[#1a1a1a] flex flex-col gap-3">
+            <div>
+              {type === 'location-prompt' && <label className="text-xs text-gray-500 mb-1 block">Nama Lokasi</label>}
+              <input 
+                type="text" 
+                autoFocus
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                className="w-full p-2 bg-[#222] border border-[#444] rounded text-sm text-white focus:border-komdigi-green outline-none transition-colors"
+                autoComplete="off"
+                spellCheck="false"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && type !== 'location-prompt') onConfirm(inputValue);
+                  if (e.key === 'Escape') onCancel();
+                }}
+              />
+            </div>
+            
+            {type === 'location-prompt' && (
+              <div>
+                <label className="text-xs text-gray-500 mb-1 block">Alamat Lengkap</label>
+                <textarea 
+                  rows={2}
+                  value={addressValue}
+                  onChange={(e) => setAddressValue(e.target.value)}
+                  className="w-full p-2 bg-[#222] border border-[#444] rounded text-sm text-white focus:border-komdigi-green outline-none transition-colors resize-none"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      onConfirm({ name: inputValue, address: addressValue });
+                    }
+                    if (e.key === 'Escape') onCancel();
+                  }}
+                />
+              </div>
+            )}
           </div>
         )}
 
@@ -54,7 +84,11 @@ export default function CustomDialog({ isOpen, type, title, message, defaultValu
             </button>
           )}
           <button 
-            onClick={() => type === 'prompt' ? onConfirm(inputValue) : onConfirm()}
+            onClick={() => {
+              if (type === 'location-prompt') onConfirm({ name: inputValue, address: addressValue });
+              else if (type === 'prompt') onConfirm(inputValue);
+              else onConfirm();
+            }}
             className={`px-4 py-1.5 rounded-sm text-xs font-semibold text-white transition-colors shadow-sm ${
               type === 'confirm' ? 'bg-red-600 hover:bg-red-700' : 'bg-komdigi-blue hover:bg-[#0082c4]'
             }`}

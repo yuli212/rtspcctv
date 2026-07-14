@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
 const DEFAULT_LOCATIONS = [
-  { id: 'loc1', name: 'Kantor Utama', lat: -7.9666, lng: 112.6326 },
-  { id: 'loc2', name: 'Cabang A', lat: -7.9500, lng: 112.6200 },
+  { id: 'loc1', name: 'Kantor Utama', address: 'Jl. Merdeka No.1, Malang', lat: -7.9666, lng: 112.6326 },
+  { id: 'loc2', name: 'Cabang A', address: 'Jl. Sudirman No.5, Malang', lat: -7.9500, lng: 112.6200 },
 ];
 
 export function useLocations() {
@@ -22,10 +22,11 @@ export function useLocations() {
     localStorage.setItem('cctv_locations', JSON.stringify(locations));
   }, [locations]);
 
-  const addLocation = (name, lat = -7.9666, lng = 112.6326) => {
+  const addLocation = (name, address = '', lat = -7.9666, lng = 112.6326) => {
     const newLocation = {
       id: `loc_${Date.now()}`,
       name: name.trim(),
+      address: address.trim(),
       lat,
       lng
     };
@@ -33,8 +34,8 @@ export function useLocations() {
     return newLocation;
   };
 
-  const updateLocation = (id, newName, lat, lng) => {
-    setLocations(prev => prev.map(loc => loc.id === id ? { ...loc, name: newName.trim(), lat, lng } : loc));
+  const updateLocation = (id, newName, newAddress, lat, lng) => {
+    setLocations(prev => prev.map(loc => loc.id === id ? { ...loc, name: newName.trim(), address: newAddress?.trim() || '', lat, lng } : loc));
   };
 
   const deleteLocation = (id) => {

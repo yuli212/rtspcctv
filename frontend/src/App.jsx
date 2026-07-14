@@ -22,27 +22,27 @@ function App() {
         
         {/* 1. Public Routes */}
         <Route element={<PublicLayout />}>
-          <Route path="/" element={<Navigate to="/dashboard/view" replace />} />
+          <Route path="/" element={<Navigate to="/dashboard/maps" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Route>
 
         {/* 2. User Dashboard Routes (Guest) */}
         <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<Navigate to="view" replace />} />
+          <Route index element={<Navigate to="maps" replace />} />
           <Route path="view" element={<MainViewTab />} />
           <Route path="maps" element={<MapsTab />} />
         </Route>
 
         {/* 3. Admin Dashboard Routes */}
         <Route path="/admin" element={<DashboardLayout />}>
-          <Route index element={<Navigate to="view" replace />} />
+          <Route index element={<Navigate to="maps" replace />} />
           <Route path="view" element={<MainViewTab />} />
           <Route path="maps" element={<MapsTab />} />
         </Route>
 
         {/* 404 Fallback */}
-        <Route path="*" element={<Navigate to="/dashboard/view" replace />} />
+        <Route path="*" element={<Navigate to="/dashboard/maps" replace />} />
         
       </Routes>
     </BrowserRouter>

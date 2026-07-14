@@ -110,13 +110,14 @@ export default function MainViewTab() {
     e.stopPropagation();
     setDialogState({
       isOpen: true,
-      type: 'prompt',
-      title: 'Ubah Nama Lokasi',
-      message: 'Masukkan nama baru untuk lokasi ini:',
+      type: 'location-prompt',
+      title: 'Ubah Lokasi',
+      message: 'Masukkan nama baru dan alamat lengkap untuk lokasi ini:',
       defaultValue: loc.name,
-      onConfirm: (newName) => {
-        if (newName && newName.trim()) {
-          updateLocation(loc.id, newName.trim(), loc.lat, loc.lng);
+      defaultAddress: loc.address,
+      onConfirm: (data) => {
+        if (data && data.name && data.name.trim()) {
+          updateLocation(loc.id, data.name.trim(), data.address, loc.lat, loc.lng);
         }
         closeDialog();
       }
@@ -193,14 +194,18 @@ export default function MainViewTab() {
       <div className="flex flex-1 overflow-hidden">
         
         {/* Left Panel - Resource Tree */}
-        <div className="w-64 bg-[#2b2b2b] border-r border-black flex flex-col h-full shrink-0">
+        <div className="w-64 bg-[#2b2b2b] border-r border-black flex flex-col h-full shrink-0 z-10 shadow-xl">
           
+          {isAdmin && (
+            <div className="p-3 border-b border-[#1a1a1a] bg-[#1e1e1e]">
+              <h2 className="text-white font-semibold flex items-center gap-2 text-sm tracking-wide">
+                <Video className="w-4 h-4 text-komdigi-green" /> MANAJEMEN CCTV
+              </h2>
+            </div>
+          )}
+
           {/* Panel Header */}
           <div className="p-2 border-b border-[#1a1a1a]">
-            <div className="flex gap-2 mb-2">
-              <button className="flex-1 bg-[#3a3a3a] text-xs font-semibold py-1.5 rounded-sm text-gray-300 border-t-2 border-t-komdigi-green">Resource</button>
-            </div>
-            
             {/* Search */}
             <div className="relative">
               <input 
@@ -208,7 +213,7 @@ export default function MainViewTab() {
                 placeholder="Search..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[#1e1e1e] border border-[#333] rounded-sm py-1 pl-7 pr-2 text-xs text-gray-300 focus:outline-none focus:border-komdigi-green transition-colors"
+                className="w-full bg-white/5 border border-white/10 backdrop-blur-md rounded-sm py-1 pl-7 pr-2 text-xs text-gray-300 focus:outline-none focus:bg-white/10 focus:border-komdigi-green focus:ring-1 focus:ring-komdigi-green/30 transition-all duration-300"
               />
               <Search className="w-3 h-3 absolute left-2 top-1.5 text-gray-500" />
             </div>
@@ -228,7 +233,7 @@ export default function MainViewTab() {
                   {/* Location Node */}
                   <div 
                     onClick={() => toggleLocation(loc.id)}
-                    className="flex items-center justify-between py-1 px-1 hover:bg-[#3a3a3a] rounded-sm cursor-pointer transition-colors group"
+                    className="flex items-center justify-between py-1 px-1 rounded-sm cursor-pointer hover:bg-white/5 hover:translate-x-1 hover:shadow-sm transition-all duration-300 ease-out group"
                   >
                     <div className="flex items-center gap-1.5 overflow-hidden flex-1">
                       {isExpanded ? <ChevronDown className="w-3.5 h-3.5 shrink-0" /> : <ChevronRight className="w-3.5 h-3.5 shrink-0" />}
@@ -262,7 +267,7 @@ export default function MainViewTab() {
                         <div 
                           key={cam.id}
                           onClick={() => handleCameraSelect(cam)}
-                          className="flex items-center justify-between py-1 px-2 hover:bg-[#3a3a3a] rounded-sm cursor-pointer transition-colors group"
+                          className="flex items-center justify-between py-1 px-2 rounded-sm cursor-pointer hover:bg-white/5 hover:translate-x-1 hover:shadow-sm transition-all duration-300 ease-out group"
                         >
                           <div className="flex items-center gap-2 overflow-hidden flex-1">
                             <div className="w-2 h-2 rounded-full shrink-0 bg-komdigi-green"></div>
@@ -311,8 +316,8 @@ export default function MainViewTab() {
                 <div 
                   key={index} 
                   onClick={() => setActiveCameraIndex(index)}
-                  className={`bg-[#1e1e1e] relative overflow-hidden flex justify-center items-center cursor-pointer transition-all box-border group
-                    ${isActive ? 'border-2 border-komdigi-green' : 'border border-[#333] hover:border-gray-500'}
+                  className={`bg-[#1e1e1e] relative overflow-hidden flex justify-center items-center cursor-pointer box-border group transition-all duration-500 ease-out
+                    ${isActive ? 'border border-komdigi-green shadow-[0_0_20px_rgba(0,181,170,0.35)] ring-1 ring-komdigi-green/50 z-10' : 'border border-white/5 hover:border-white/20'}
                     ${getItemClass(index)}`}
                 >
                   {cam ? (
@@ -350,30 +355,30 @@ export default function MainViewTab() {
       </div>
 
       {/* Bottom Toolbar */}
-      <div className="h-10 bg-[#2b2b2b] border-t border-black flex items-center justify-between px-4 shrink-0">
+      <div className="h-12 bg-black/40 backdrop-blur-xl border-t border-white/10 flex items-center justify-between px-4 shrink-0 shadow-[0_-5px_15px_rgba(0,0,0,0.3)] z-20">
         <div className="flex items-center gap-4">
-          <Settings2 className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer" />
+          <Settings2 className="w-4 h-4 text-gray-400 hover:text-white cursor-pointer active:scale-90 transition-transform" />
           <span className="text-xs text-gray-500">PTZ Control</span>
         </div>
         
         <div className="flex items-center gap-2">
-          <button onClick={() => setLayout('single')} className={`p-1.5 rounded hover:bg-[#444] transition-colors ${layout === 'single' ? 'text-komdigi-green' : 'text-gray-400'}`} title="1x1">
+          <button onClick={() => setLayout('single')} className={`p-1.5 rounded hover:bg-white/10 active:scale-90 transition-all ${layout === 'single' ? 'text-komdigi-green shadow-[0_0_10px_rgba(0,181,170,0.2)]' : 'text-gray-400'}`} title="1x1">
             <Maximize className="w-4 h-4" />
           </button>
-          <button onClick={() => setLayout('grid2')} className={`p-1.5 rounded hover:bg-[#444] transition-colors ${layout === 'grid2' ? 'text-komdigi-green' : 'text-gray-400'}`} title="2x2">
+          <button onClick={() => setLayout('grid2')} className={`p-1.5 rounded hover:bg-white/10 active:scale-90 transition-all ${layout === 'grid2' ? 'text-komdigi-green shadow-[0_0_10px_rgba(0,181,170,0.2)]' : 'text-gray-400'}`} title="2x2">
             <Grid2x2 className="w-4 h-4" />
           </button>
-          <button onClick={() => setLayout('grid3')} className={`p-1.5 rounded hover:bg-[#444] transition-colors ${layout === 'grid3' ? 'text-komdigi-green' : 'text-gray-400'}`} title="3x3">
+          <button onClick={() => setLayout('grid3')} className={`p-1.5 rounded hover:bg-white/10 active:scale-90 transition-all ${layout === 'grid3' ? 'text-komdigi-green shadow-[0_0_10px_rgba(0,181,170,0.2)]' : 'text-gray-400'}`} title="3x3">
             <Grid3x3 className="w-4 h-4" />
           </button>
-          <button onClick={() => setLayout('grid4')} className={`p-1.5 rounded hover:bg-[#444] transition-colors ${layout === 'grid4' ? 'text-komdigi-green' : 'text-gray-400'}`} title="4x4">
+          <button onClick={() => setLayout('grid4')} className={`p-1.5 rounded hover:bg-white/10 active:scale-90 transition-all ${layout === 'grid4' ? 'text-komdigi-green shadow-[0_0_10px_rgba(0,181,170,0.2)]' : 'text-gray-400'}`} title="4x4">
             <LayoutGrid className="w-4 h-4" />
           </button>
-          <div className="w-px h-4 bg-gray-600 mx-1"></div>
-          <button onClick={() => setLayout('grid1_5')} className={`p-1.5 rounded hover:bg-[#444] transition-colors text-xs font-bold ${layout === 'grid1_5' ? 'text-komdigi-green' : 'text-gray-400'}`} title="1 Besar 5 Kecil">
+          <div className="w-px h-4 bg-gray-600/50 mx-1"></div>
+          <button onClick={() => setLayout('grid1_5')} className={`p-1.5 rounded hover:bg-white/10 active:scale-90 transition-all text-xs font-bold ${layout === 'grid1_5' ? 'text-komdigi-green shadow-[0_0_10px_rgba(0,181,170,0.2)]' : 'text-gray-400'}`} title="1 Besar 5 Kecil">
             1+5
           </button>
-          <button onClick={() => setLayout('grid1_7')} className={`p-1.5 rounded hover:bg-[#444] transition-colors text-xs font-bold ${layout === 'grid1_7' ? 'text-komdigi-green' : 'text-gray-400'}`} title="1 Besar 7 Kecil">
+          <button onClick={() => setLayout('grid1_7')} className={`p-1.5 rounded hover:bg-white/10 active:scale-90 transition-all text-xs font-bold ${layout === 'grid1_7' ? 'text-komdigi-green shadow-[0_0_10px_rgba(0,181,170,0.2)]' : 'text-gray-400'}`} title="1 Besar 7 Kecil">
             1+7
           </button>
         </div>

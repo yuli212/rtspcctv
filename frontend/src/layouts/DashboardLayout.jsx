@@ -39,18 +39,6 @@ export default function DashboardLayout() {
           {/* Tabs */}
           <div className="flex h-full">
             <Link 
-              to={`${basePath}/view`}
-              className={`flex items-center gap-2 px-6 h-full border-r border-[#333] transition-colors ${
-                isMainView 
-                  ? 'bg-[#3a3a3a] text-white border-t-2 border-t-komdigi-green' 
-                  : 'hover:bg-[#2a2a2a] text-gray-400 border-t-2 border-t-transparent'
-              }`}
-            >
-              <Monitor className="w-4 h-4" />
-              <span className="text-xs font-semibold uppercase tracking-wider">Main View</span>
-            </Link>
-            
-            <Link 
               to={`${basePath}/maps`}
               className={`flex items-center gap-2 px-6 h-full border-r border-[#333] transition-colors ${
                 isMapsView 
@@ -60,6 +48,18 @@ export default function DashboardLayout() {
             >
               <MapIcon className="w-4 h-4" />
               <span className="text-xs font-semibold uppercase tracking-wider">Maps</span>
+            </Link>
+
+            <Link 
+              to={`${basePath}/view`}
+              className={`flex items-center gap-2 px-6 h-full border-r border-[#333] transition-colors ${
+                isMainView 
+                  ? 'bg-[#3a3a3a] text-white border-t-2 border-t-komdigi-green' 
+                  : 'hover:bg-[#2a2a2a] text-gray-400 border-t-2 border-t-transparent'
+              }`}
+            >
+              <Monitor className="w-4 h-4" />
+              <span className="text-xs font-semibold uppercase tracking-wider">Main View</span>
             </Link>
           </div>
         </div>
